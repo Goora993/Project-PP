@@ -1,4 +1,4 @@
-package pl.pp.project.demo;
+package pl.pp.project;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
