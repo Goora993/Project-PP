@@ -8,15 +8,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public @Data class Author {
+public @Data
+class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String firstName;
     private String lastName;
-    private String dateOfBirth;
+    private String pesel;
 
-    public Author() {
-
+    public User() {
     }
 }

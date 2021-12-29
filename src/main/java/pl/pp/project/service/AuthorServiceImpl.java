@@ -1,0 +1,59 @@
+package pl.pp.project.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import pl.pp.project.data.models.Author;
+import pl.pp.project.data.payloads.request.CreateAuthorRequest;
+import pl.pp.project.data.payloads.response.MessageResponse;
+import pl.pp.project.data.repository.AuthorRepository;
+import pl.pp.project.exception.ResourceNotFoundException;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class AuthorServiceImpl implements AuthorService {
+    @Autowired
+    AuthorRepository authorRepository;
+
+    @Override
+    public MessageResponse createAuthor(CreateAuthorRequest createAuthorRequest) {
+        Author newAuthor = new Author();
+        newAuthor.setFirstName(createAuthorRequest.getFirstName());
+        newAuthor.setLastName(createAuthorRequest.getLastName());
+        newAuthor.setDateOfBirth(createAuthorRequest.getDateOfBirth());
+        authorRepository.save(newAuthor);
+        return new MessageResponse("New author created successfully");
+    }
+
+    @Override
+    public MessageResponse updateAuthor(Integer authorId, CreateAuthorRequest createAuthorRequest) {
+        Optional<Author> author = authorRepository.findById(authorId);
+        if (author.isEmpty()) {
+            throw new ResourceNotFoundException("Author", "id", authorId);
+        } else {
+            author.get().setFirstName(createAuthorRequest.getFirstName());
+            author.get().setLastName(createAuthorRequest.getLastName());
+            author.get().setDateOfBirth(createAuthorRequest.getDateOfBirth());
+            authorRepository.save(author.get());
+            return new MessageResponse("Author updated successfully");
+        }
+    }
+
+    @Override
+    public void deleteAuthor(Integer authorId) {
+        if (authorRepository.getById(authorId).getId() == authorId) {
+            authorRepository.deleteById(authorId);
+        } else throw new ResourceNotFoundException("Author", "id", authorId);
+    }
+
+    @Override
+    public Author getASingleAuthor(Integer authorId) {
+        return authorRepository.findById(authorId).orElseThrow(() -> new ResourceNotFoundException("Author", "id", authorId));
+    }
+
+    @Override
+    public List<Author> getAllAuthors() {
+        return authorRepository.findAll();
+    }
+}

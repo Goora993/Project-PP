@@ -3,21 +3,17 @@ package pl.pp.project.data.payloads.request;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-public @Data class AddBookRequest {
+public @Data
+class ReturnBookRequest {
     @NotBlank
     @NotNull
-    private String name;
+    @NotEmpty
+    private Integer userId;
     @NotBlank
     @NotNull
-    private String isbn;
-    @NotBlank
-    @NotNull
-    private String publicationYear;
-    @NotBlank
-    @NotNull
-    private int authorId;
-
-
+    @NotEmpty
+    private Integer bookId;
 }
