@@ -25,16 +25,18 @@ public class BookServiceImpl implements BookService {
     public MessageResponse createBook(CreateBookRequest createBookRequest) {
         Book newBook = new Book();
         Optional<Author> authorById = authorRepository.findById(createBookRequest.getAuthorId());
+
         if(authorById.isPresent()){
             newBook.setIsbn(createBookRequest.getIsbn());
             newBook.setPublicationYear(createBookRequest.getPublicationYear());
             newBook.setName(createBookRequest.getName());
-            newBook.setAuthorId(createBookRequest.getAuthorId());
+            newBook.setAuthor(authorById.get());
             bookRepository.save(newBook);
             return new MessageResponse("New book was added successfully");
         } else {
             throw new ResourceNotFoundException("Author", "id", createBookRequest.getAuthorId());
         }
+
     }
 
     @Override
@@ -44,7 +46,7 @@ public class BookServiceImpl implements BookService {
             throw new ResourceNotFoundException("Book", "id", bookId);
         } else {
             book.get().setName(createBookRequest.getName());
-            book.get().setAuthorId(createBookRequest.getAuthorId());
+//            book.get().setAuthorId(createBookRequest.getAuthorId());
             book.get().setIsbn(createBookRequest.getIsbn());
             book.get().setPublicationYear(createBookRequest.getPublicationYear());
             bookRepository.save(book.get());

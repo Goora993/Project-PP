@@ -1,12 +1,13 @@
 package pl.pp.project.data.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.sql.Date;
+import java.util.Set;
 
 @Entity
 public @Data class Author {
@@ -16,6 +17,12 @@ public @Data class Author {
     private String firstName;
     private String lastName;
     private Date dateOfBirth;
+    @OneToMany(mappedBy="author", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @Column(nullable = true)
+    @JsonManagedReference
+    private Set<Book> books;
 
     public Author() {
 
