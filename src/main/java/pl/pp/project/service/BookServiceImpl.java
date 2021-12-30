@@ -2,9 +2,11 @@ package pl.pp.project.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.pp.project.data.models.Author;
 import pl.pp.project.data.models.Book;
 import pl.pp.project.data.payloads.request.CreateBookRequest;
 import pl.pp.project.data.payloads.response.MessageResponse;
+import pl.pp.project.data.repository.AuthorRepository;
 import pl.pp.project.data.repository.BookRepository;
 import pl.pp.project.exception.ResourceNotFoundException;
 
@@ -16,15 +18,47 @@ public class BookServiceImpl implements BookService {
     @Autowired
     BookRepository bookRepository;
 
+    @Autowired
+    AuthorRepository authorRepository;
+
     @Override
     public MessageResponse createBook(CreateBookRequest createBookRequest) {
         Book newBook = new Book();
-        newBook.setName(createBookRequest.getName());
-        newBook.setAuthorId(createBookRequest.getAuthorId());
+        Author newAuthor = new Author();
+
         newBook.setIsbn(createBookRequest.getIsbn());
         newBook.setPublicationYear(createBookRequest.getPublicationYear());
-        bookRepository.save(newBook);
-        return new MessageResponse("New book added successfully");
+        newBook.setName(createBookRequest.getName());
+
+        if (createBookRequest.getAuthorId() != 0) {
+            if(authorRepository.findById(createBookRequest.getAuthorId()).isPresent()){
+                newBook.setAuthorId(createBookRequest.getAuthorId());
+                bookRepository.save(newBook);
+                return new MessageResponse("New book added successfully with existing author");
+            } else {
+                throw new ResourceNotFoundException("Author", "id", createBookRequest.getAuthorId());
+            }
+        } else {
+            Optional<Author> existingAuthor = getAuthorByCriteria(createBookRequest.getAuthorFirstName(), createBookRequest.getAuthorLastName(), createBookRequest.getAuthorDateOfBirth());
+            if(existingAuthor.isPresent()){
+                newBook.setAuthorId(existingAuthor.get().getId());
+                bookRepository.save(newBook);
+                return new MessageResponse("New book added successfully with existing author");
+            } else {
+                newAuthor.setFirstName(createBookRequest.getAuthorFirstName());
+                newAuthor.setLastName(createBookRequest.getAuthorLastName());
+                newAuthor.setDateOfBirth(createBookRequest.getAuthorDateOfBirth());
+                authorRepository.save(newAuthor);
+                existingAuthor = getAuthorByCriteria(createBookRequest.getAuthorFirstName(), createBookRequest.getAuthorLastName(), createBookRequest.getAuthorDateOfBirth());
+                newBook.setAuthorId(existingAuthor.get().getId());
+                bookRepository.save(newBook);
+                return new MessageResponse("New book added successfully with new author");
+            }
+        }
+    }
+
+    private Optional<Author> getAuthorByCriteria(String firstName, String lastName, String dateOfBirth) {
+        return authorRepository.findByFirstNameAndLastNameAndDateOfBirth(firstName, lastName, dateOfBirth);
     }
 
     @Override
@@ -32,7 +66,7 @@ public class BookServiceImpl implements BookService {
         Optional<Book> book = bookRepository.findById(bookId);
         if (book.isEmpty()) {
             throw new ResourceNotFoundException("Book", "id", bookId);
-        } else{
+        } else {
             book.get().setName(createBookRequest.getName());
             book.get().setAuthorId(createBookRequest.getAuthorId());
             book.get().setIsbn(createBookRequest.getIsbn());

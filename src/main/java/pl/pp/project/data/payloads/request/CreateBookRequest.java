@@ -18,4 +18,13 @@ public @Data class CreateBookRequest {
     @NotBlank
     @NotNull
     private int authorId;
+    @NotBlank
+    @NotNull
+    private String authorFirstName;
+    @NotBlank
+    @NotNull
+    private String authorLastName;
+    @NotBlank
+    @NotNull
+    private String authorDateOfBirth;
 }
