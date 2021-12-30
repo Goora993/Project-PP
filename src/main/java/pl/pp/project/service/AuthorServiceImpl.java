@@ -6,6 +6,7 @@ import pl.pp.project.data.models.Author;
 import pl.pp.project.data.payloads.request.CreateAuthorRequest;
 import pl.pp.project.data.payloads.response.MessageResponse;
 import pl.pp.project.data.repository.AuthorRepository;
+import pl.pp.project.exception.AuthorAlreadyExistsException;
 import pl.pp.project.exception.ResourceNotFoundException;
 
 import java.util.List;
@@ -18,12 +19,17 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public MessageResponse createAuthor(CreateAuthorRequest createAuthorRequest) {
-        Author newAuthor = new Author();
-        newAuthor.setFirstName(createAuthorRequest.getFirstName());
-        newAuthor.setLastName(createAuthorRequest.getLastName());
-        newAuthor.setDateOfBirth(createAuthorRequest.getDateOfBirth());
-        authorRepository.save(newAuthor);
-        return new MessageResponse("New author created successfully");
+        Optional<Author> existingAuthor = authorRepository.findByFirstNameAndLastNameAndDateOfBirth(createAuthorRequest.getFirstName(), createAuthorRequest.getLastName(), createAuthorRequest.getDateOfBirth());
+        if(existingAuthor.isPresent()){
+            throw new AuthorAlreadyExistsException(createAuthorRequest.getFirstName(), createAuthorRequest.getLastName(), createAuthorRequest.getDateOfBirth());
+        } else {
+            Author newAuthor = new Author();
+            newAuthor.setFirstName(createAuthorRequest.getFirstName());
+            newAuthor.setLastName(createAuthorRequest.getLastName());
+            newAuthor.setDateOfBirth(createAuthorRequest.getDateOfBirth());
+            authorRepository.save(newAuthor);
+            return new MessageResponse("New author created successfully");
+        }
     }
 
     @Override

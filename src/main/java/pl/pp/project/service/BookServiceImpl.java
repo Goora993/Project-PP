@@ -24,41 +24,17 @@ public class BookServiceImpl implements BookService {
     @Override
     public MessageResponse createBook(CreateBookRequest createBookRequest) {
         Book newBook = new Book();
-        Author newAuthor = new Author();
-
-        newBook.setIsbn(createBookRequest.getIsbn());
-        newBook.setPublicationYear(createBookRequest.getPublicationYear());
-        newBook.setName(createBookRequest.getName());
-
-        if (createBookRequest.getAuthorId() != 0) {
-            if(authorRepository.findById(createBookRequest.getAuthorId()).isPresent()){
-                newBook.setAuthorId(createBookRequest.getAuthorId());
-                bookRepository.save(newBook);
-                return new MessageResponse("New book added successfully with existing author");
-            } else {
-                throw new ResourceNotFoundException("Author", "id", createBookRequest.getAuthorId());
-            }
+        Optional<Author> authorById = authorRepository.findById(createBookRequest.getAuthorId());
+        if(authorById.isPresent()){
+            newBook.setIsbn(createBookRequest.getIsbn());
+            newBook.setPublicationYear(createBookRequest.getPublicationYear());
+            newBook.setName(createBookRequest.getName());
+            newBook.setAuthorId(createBookRequest.getAuthorId());
+            bookRepository.save(newBook);
+            return new MessageResponse("New book was added successfully");
         } else {
-            Optional<Author> existingAuthor = getAuthorByCriteria(createBookRequest.getAuthorFirstName(), createBookRequest.getAuthorLastName(), createBookRequest.getAuthorDateOfBirth());
-            if(existingAuthor.isPresent()){
-                newBook.setAuthorId(existingAuthor.get().getId());
-                bookRepository.save(newBook);
-                return new MessageResponse("New book added successfully with existing author");
-            } else {
-                newAuthor.setFirstName(createBookRequest.getAuthorFirstName());
-                newAuthor.setLastName(createBookRequest.getAuthorLastName());
-                newAuthor.setDateOfBirth(createBookRequest.getAuthorDateOfBirth());
-                authorRepository.save(newAuthor);
-                existingAuthor = getAuthorByCriteria(createBookRequest.getAuthorFirstName(), createBookRequest.getAuthorLastName(), createBookRequest.getAuthorDateOfBirth());
-                newBook.setAuthorId(existingAuthor.get().getId());
-                bookRepository.save(newBook);
-                return new MessageResponse("New book added successfully with new author");
-            }
+            throw new ResourceNotFoundException("Author", "id", createBookRequest.getAuthorId());
         }
-    }
-
-    private Optional<Author> getAuthorByCriteria(String firstName, String lastName, String dateOfBirth) {
-        return authorRepository.findByFirstNameAndLastNameAndDateOfBirth(firstName, lastName, dateOfBirth);
     }
 
     @Override

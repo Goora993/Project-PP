@@ -8,15 +8,17 @@ import pl.pp.project.data.payloads.request.BorrowBookRequest;
 import pl.pp.project.data.payloads.response.MessageResponse;
 import pl.pp.project.service.BorrowBookService;
 
+import javax.validation.Valid;
+
 
 @RestController
 @RequestMapping("/book")
-public class BorrowBookController {
+public class BorrowBookController extends RequestErrorHandlingController {
     @Autowired
     BorrowBookService borrowBookService;
 
     @PostMapping("/borrow")
-    public ResponseEntity<MessageResponse> borrowBook(@RequestBody BorrowBookRequest borrowBook) {
+    public ResponseEntity<MessageResponse> borrowBook(@Valid @RequestBody BorrowBookRequest borrowBook) {
         MessageResponse borrowedBook = borrowBookService.borrowBook(borrowBook);
         return new ResponseEntity<>(borrowedBook, HttpStatus.OK);
     }

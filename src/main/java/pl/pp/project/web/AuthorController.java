@@ -9,11 +9,12 @@ import pl.pp.project.data.payloads.request.CreateAuthorRequest;
 import pl.pp.project.data.payloads.response.MessageResponse;
 import pl.pp.project.service.AuthorService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/author")
-public class AuthorController {
+public class AuthorController extends RequestErrorHandlingController {
     @Autowired
     AuthorService authorService;
 
@@ -30,7 +31,7 @@ public class AuthorController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<MessageResponse> addAuthor(@RequestBody CreateAuthorRequest author) {
+    public ResponseEntity<MessageResponse> addAuthor(@Valid @RequestBody CreateAuthorRequest author) {
         MessageResponse newAuthor = authorService.createAuthor(author);
         return new ResponseEntity<>(newAuthor, HttpStatus.CREATED);
     }

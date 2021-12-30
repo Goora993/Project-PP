@@ -9,11 +9,12 @@ import pl.pp.project.data.payloads.request.CreateUserRequest;
 import pl.pp.project.data.payloads.response.MessageResponse;
 import pl.pp.project.service.UserService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/user")
-public class UserController {
+public class UserController extends RequestErrorHandlingController {
     @Autowired
     UserService userService;
 
@@ -30,7 +31,7 @@ public class UserController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<MessageResponse> addUser(@RequestBody CreateUserRequest user) {
+    public ResponseEntity<MessageResponse> addUser(@Valid @RequestBody CreateUserRequest user) {
         MessageResponse newUser = userService.createUser(user);
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }

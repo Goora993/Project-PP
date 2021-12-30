@@ -1,6 +1,5 @@
 package pl.pp.project.web;
 
-import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,11 +9,12 @@ import pl.pp.project.data.payloads.request.CreateBookRequest;
 import pl.pp.project.data.payloads.response.MessageResponse;
 import pl.pp.project.service.BookService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/book")
-public class BookController {
+public class BookController extends RequestErrorHandlingController {
     @Autowired
     BookService bookService;
 
@@ -31,15 +31,17 @@ public class BookController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<MessageResponse> addBook(@RequestBody CreateBookRequest book) {
+    public ResponseEntity<MessageResponse> addBook(@Valid @RequestBody CreateBookRequest book) {
         MessageResponse newBook = bookService.createBook(book);
         return new ResponseEntity<>(newBook, HttpStatus.CREATED);
     }
+
     @PutMapping("/update/{id}")
     public ResponseEntity<MessageResponse> updateBook( @PathVariable Integer id, @RequestBody CreateBookRequest book) {
         MessageResponse updateBook = bookService.updateBook(id, book);
         return new ResponseEntity<>(updateBook, HttpStatus.OK);
     }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteBook(@PathVariable("id") Integer id) {
         bookService.deleteBook(id);

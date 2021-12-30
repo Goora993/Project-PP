@@ -2,21 +2,13 @@ package pl.pp.project.data.payloads.request;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 public @Data class CreateUserRequest {
-    @NotBlank
-    @NotNull
-    @NotEmpty
+    @NotEmpty(message = "User first name must be provided")
     private String firstName;
-    @NotBlank
-    @NotNull
-    @NotEmpty
+    @NotEmpty(message = "User last name must be provided")
     private String lastName;
-    @NotBlank
-    @NotNull
-    @NotEmpty
+    @NotEmpty(message = "User pesel must be provided")
     private String pesel;
 }

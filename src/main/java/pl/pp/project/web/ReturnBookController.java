@@ -11,14 +11,16 @@ import pl.pp.project.data.payloads.request.ReturnBookRequest;
 import pl.pp.project.data.payloads.response.MessageResponse;
 import pl.pp.project.service.ReturnBookService;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/book")
-public class ReturnBookController {
+public class ReturnBookController extends RequestErrorHandlingController {
     @Autowired
     ReturnBookService returnBookService;
 
     @PostMapping("/return")
-    public ResponseEntity<MessageResponse> returnBook(@RequestBody ReturnBookRequest returnBook) {
+    public ResponseEntity<MessageResponse> returnBook(@Valid @RequestBody ReturnBookRequest returnBook) {
         MessageResponse returnedBook = returnBookService.returnBook(returnBook);
         return new ResponseEntity<>(returnedBook, HttpStatus.OK);
     }
