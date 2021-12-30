@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import pl.pp.project.data.models.Book;
 import pl.pp.project.data.payloads.request.CreateBookRequest;
 import pl.pp.project.data.payloads.response.MessageResponse;
+import pl.pp.project.dto.BookDto;
+import pl.pp.project.dto.BookWithAuthorDto;
 import pl.pp.project.service.BookService;
 
 import javax.validation.Valid;
@@ -19,8 +21,8 @@ public class BookController extends RequestErrorHandlingController {
     BookService bookService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<Book>> getAllBooks () {
-        List<Book> books = bookService.getAllBooks();
+    public ResponseEntity<List<BookDto>> getAllBooks () {
+        List<BookDto> books = bookService.getAllBooks();
         return new ResponseEntity<>(books, HttpStatus.OK);
     }
 

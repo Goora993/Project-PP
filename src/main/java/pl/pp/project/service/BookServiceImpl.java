@@ -8,8 +8,13 @@ import pl.pp.project.data.payloads.request.CreateBookRequest;
 import pl.pp.project.data.payloads.response.MessageResponse;
 import pl.pp.project.data.repository.AuthorRepository;
 import pl.pp.project.data.repository.BookRepository;
+import pl.pp.project.dto.AuthorDto;
+import pl.pp.project.dto.AuthorWithoutBooksDto;
+import pl.pp.project.dto.BookDto;
+import pl.pp.project.dto.BookWithAuthorDto;
 import pl.pp.project.exception.ResourceNotFoundException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -67,7 +72,24 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Book> getAllBooks() {
-        return bookRepository.findAll();
+    public List<BookDto> getAllBooks() {
+        List<Book> books = bookRepository.findAll();
+        List<BookDto> bookWithAuthorDtos = new ArrayList<>();
+
+        for (int i = 0; i < books.size(); i++) {
+            AuthorDto authorWithoutBooksDto = new AuthorWithoutBooksDto(books.get(i).getAuthor().getId(),
+                    books.get(i).getAuthor().getFirstName(),
+                    books.get(i).getAuthor().getLastName(),
+                    books.get(i).getAuthor().getDateOfBirth());
+            BookDto bookWithAuthorDto = new BookWithAuthorDto(books.get(i).getId(),
+                    books.get(i).getName(),
+                    books.get(i).getIsbn(),
+                    books.get(i).getPublicationYear(),
+                    books.get(i).isBorrowed(),
+                    authorWithoutBooksDto);
+
+            bookWithAuthorDtos.add(i, bookWithAuthorDto);
+        }
+        return bookWithAuthorDtos;
     }
 }

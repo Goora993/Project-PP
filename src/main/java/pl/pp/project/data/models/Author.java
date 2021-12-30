@@ -17,6 +17,7 @@ public @Data class Author {
     private String firstName;
     private String lastName;
     private Date dateOfBirth;
+
     @OneToMany(mappedBy="author", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude

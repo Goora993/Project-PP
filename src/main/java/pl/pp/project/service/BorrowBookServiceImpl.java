@@ -43,8 +43,10 @@ public class BorrowBookServiceImpl implements BorrowBookService {
                 throw new BookAlreadyBorrowedException(bookId);
             } else {
                 book.get().setBorrowed(true);
+                book.get().setUser(user.get());
                 borrowedBook.setUserId(userId);
                 borrowedBook.setBookId(bookId);
+                borrowedBook.setActive(true);
                 bookRepository.save(book.get());
                 borrowedBookRepository.save(borrowedBook);
                 return new MessageResponse("Book was borrowed successfully");

@@ -47,6 +47,7 @@ public class ReturnBookServiceImpl implements ReturnBookService {
             if (userIdRelatedToBorrowedBook.equals(userId)) {
                 if(borrowedBook.get().isActive()){
                     book.get().setBorrowed(false);
+                    book.get().setUser(null);
                     borrowedBook.get().setActive(false);
                     bookRepository.save(book.get());
                     borrowedBookRepository.save(borrowedBook.get());
