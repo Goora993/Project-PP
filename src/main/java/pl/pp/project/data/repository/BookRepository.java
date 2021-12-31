@@ -13,4 +13,5 @@ import java.util.Set;
 public interface BookRepository extends JpaRepository<Book, Integer> {
     Set<Book> findBooksByAuthor(Author author);
     List<Book> findBooksByUserIdAndIsBorrowed(Integer userId, Boolean isBorrowed);
+    List<Book> findBooksByIsBorrowed(Boolean isBorrowed);
 }

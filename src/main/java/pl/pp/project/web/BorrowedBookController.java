@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/borrowed")
-public class BorrowedBookController {
+public class BorrowedBookController extends RequestErrorHandlingController {
 
     @Autowired
     BorrowedBookService borrowedBookService;

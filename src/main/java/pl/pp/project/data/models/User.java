@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -23,7 +24,7 @@ class User {
     @ToString.Exclude
     @Column(nullable = true)
     @JsonManagedReference
-    private Set<Book> borrowedBooks;
+    private List<Book> borrowedBooks;
 
     public User() {
     }
