@@ -9,14 +9,15 @@ import pl.pp.project.data.payloads.response.MessageResponse;
 import pl.pp.project.data.repository.AuthorRepository;
 import pl.pp.project.data.repository.BookRepository;
 import pl.pp.project.dto.AuthorDto;
-import pl.pp.project.dto.AuthorWithoutBooksDto;
 import pl.pp.project.dto.BookDto;
-import pl.pp.project.dto.BookWithAuthorDto;
+import pl.pp.project.dto.mappers.AuthorMapper;
+import pl.pp.project.dto.mappers.BookMapper;
 import pl.pp.project.exception.ResourceNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -50,12 +51,18 @@ public class BookServiceImpl implements BookService {
         if (book.isEmpty()) {
             throw new ResourceNotFoundException("Book", "id", bookId);
         } else {
-            book.get().setName(createBookRequest.getName());
-//            book.get().setAuthorId(createBookRequest.getAuthorId());
-            book.get().setIsbn(createBookRequest.getIsbn());
-            book.get().setPublicationYear(createBookRequest.getPublicationYear());
-            bookRepository.save(book.get());
-            return new MessageResponse("Book updated successfully");
+            Optional<Author> author = authorRepository.findById(createBookRequest.getAuthorId());
+            if(author.isPresent()){
+                book.get().setName(createBookRequest.getName());
+                book.get().setAuthor(author.get());
+                book.get().setIsbn(createBookRequest.getIsbn());
+                book.get().setPublicationYear(createBookRequest.getPublicationYear());
+                bookRepository.save(book.get());
+                return new MessageResponse("Book updated successfully");
+            } else {
+                throw new ResourceNotFoundException("Author", "id", createBookRequest.getAuthorId());
+            }
+
         }
     }
 
@@ -74,22 +81,11 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<BookDto> getAllBooks() {
         List<Book> books = bookRepository.findAll();
-        List<BookDto> bookWithAuthorDtos = new ArrayList<>();
+        return BookMapper.bookListToBookWithAuthorDtoList(books);
+    }
 
-        for (int i = 0; i < books.size(); i++) {
-            AuthorDto authorWithoutBooksDto = new AuthorWithoutBooksDto(books.get(i).getAuthor().getId(),
-                    books.get(i).getAuthor().getFirstName(),
-                    books.get(i).getAuthor().getLastName(),
-                    books.get(i).getAuthor().getDateOfBirth());
-            BookDto bookWithAuthorDto = new BookWithAuthorDto(books.get(i).getId(),
-                    books.get(i).getName(),
-                    books.get(i).getIsbn(),
-                    books.get(i).getPublicationYear(),
-                    books.get(i).isBorrowed(),
-                    authorWithoutBooksDto);
-
-            bookWithAuthorDtos.add(i, bookWithAuthorDto);
-        }
-        return bookWithAuthorDtos;
+    @Override
+    public Set<Book> getBooksOfAuthor(Author author) {
+        return bookRepository.findBooksByAuthor(author);
     }
 }

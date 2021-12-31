@@ -1,13 +1,14 @@
-package pl.pp.project.dto;
+package pl.pp.project.dto.impl;
 
 
 import lombok.Data;
 
-import pl.pp.project.data.models.Author;
+import pl.pp.project.dto.AuthorDto;
+import pl.pp.project.dto.BookDto;
 
 import java.sql.Date;
 
-public @Data class BookWithAuthorDto implements BookDto{
+public @Data class BookWithAuthorDto implements BookDto {
         private int id;
         private String name;
         private String isbn;

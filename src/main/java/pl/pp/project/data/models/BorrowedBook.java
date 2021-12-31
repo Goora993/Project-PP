@@ -8,6 +8,8 @@ import javax.persistence.*;
 public @Data
 class BorrowedBook {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
     private int bookId;
     private int userId;
     private boolean active;

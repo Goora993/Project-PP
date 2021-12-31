@@ -11,3 +11,4 @@ import java.util.Optional;
 public interface AuthorRepository extends JpaRepository<Author, Integer> {
     Optional<Author> findByFirstNameAndLastNameAndDateOfBirth(String firstName, String lastName, Date dateOfBirth);
 }
+
