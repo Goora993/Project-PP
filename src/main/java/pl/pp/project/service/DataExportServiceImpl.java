@@ -1,10 +1,8 @@
 package pl.pp.project.service;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.pp.project.data.models.Book;
 import pl.pp.project.data.models.User;
 import pl.pp.project.data.payloads.request.ExportAllBooksRequest;
 import pl.pp.project.data.payloads.request.ExportUserWithBorrowedBooksRequest;
@@ -34,8 +32,6 @@ public class DataExportServiceImpl implements DataExportService {
     public MessageResponse exportUserWithBorrowedBooks(ExportUserWithBorrowedBooksRequest exportUserWithBorrowedBooksRequest) {
         Integer userId = exportUserWithBorrowedBooksRequest.getUserId();
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
-
-
             try {
                 mapper.writerWithDefaultPrettyPrinter().writeValue(new File(exportUserWithBorrowedBooksRequest.getPathToExport() + "/user.json"), user);
             } catch (IOException e) {

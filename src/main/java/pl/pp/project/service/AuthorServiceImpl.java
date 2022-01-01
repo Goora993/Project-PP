@@ -6,6 +6,8 @@ import pl.pp.project.data.models.Author;
 import pl.pp.project.data.payloads.request.CreateAuthorRequest;
 import pl.pp.project.data.payloads.response.MessageResponse;
 import pl.pp.project.data.repository.AuthorRepository;
+import pl.pp.project.dto.AuthorDto;
+import pl.pp.project.dto.impl.AuthorToImportDto;
 import pl.pp.project.exception.AuthorAlreadyExistsException;
 import pl.pp.project.exception.ResourceNotFoundException;
 
@@ -30,6 +32,16 @@ public class AuthorServiceImpl implements AuthorService {
             authorRepository.save(newAuthor);
             return new MessageResponse("New author created successfully");
         }
+    }
+
+    @Override
+    public Integer createAuthor(AuthorToImportDto authorToImportDto){
+            Author newAuthor = new Author();
+            newAuthor.setFirstName(authorToImportDto.getFirstName());
+            newAuthor.setLastName(authorToImportDto.getLastName());
+            newAuthor.setDateOfBirth(authorToImportDto.getDateOfBirth());
+            authorRepository.save(newAuthor);
+            return newAuthor.getId();
     }
 
     @Override
