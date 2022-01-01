@@ -11,6 +11,8 @@ import pl.pp.project.data.payloads.request.ExportUserWithBorrowedBooksRequest;
 import pl.pp.project.data.payloads.response.MessageResponse;
 import pl.pp.project.data.repository.BookRepository;
 import pl.pp.project.data.repository.UserRepository;
+import pl.pp.project.dto.BookDto;
+import pl.pp.project.dto.mappers.BookMapper;
 import pl.pp.project.exception.ResourceNotFoundException;
 
 import java.io.*;
@@ -33,6 +35,7 @@ public class DataExportServiceImpl implements DataExportService {
         Integer userId = exportUserWithBorrowedBooksRequest.getUserId();
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
 
+
             try {
                 mapper.writerWithDefaultPrettyPrinter().writeValue(new File(exportUserWithBorrowedBooksRequest.getPathToExport() + "/user.json"), user);
             } catch (IOException e) {
@@ -46,17 +49,17 @@ public class DataExportServiceImpl implements DataExportService {
         Boolean isBorrowed = exportAllBooksRequest.getIsBorrowed();
         String pathToExport = exportAllBooksRequest.getPathToExport();
         String message;
-        List<Book> books;
+        List<BookDto> books;
         if(isBorrowed == Boolean.TRUE){
-            books = bookRepository.findBooksByIsBorrowed(isBorrowed);
+            books = BookMapper.bookListToBookWithAuthorDtoList(bookRepository.findBooksByIsBorrowed(isBorrowed));
             pathToExport += "/borrowedBooks.json";
             message = "Borrowed books list exported successfully";
         } else if(isBorrowed == Boolean.FALSE) {
-            books = bookRepository.findBooksByIsBorrowed(isBorrowed);
+            books = BookMapper.bookListToBookWithAuthorDtoList(bookRepository.findBooksByIsBorrowed(isBorrowed));
             pathToExport += "/notBorrowedBooks.json";
             message = "Not borrowed books list exported successfully";
         } else {
-            books = bookRepository.findAll();
+            books = BookMapper.bookListToBookWithAuthorDtoList(bookRepository.findAll());
             pathToExport += "/allBooks.json";
             message = "All books list exported successfully";
         }
