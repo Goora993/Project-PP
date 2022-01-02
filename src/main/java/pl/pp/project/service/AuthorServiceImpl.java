@@ -6,7 +6,6 @@ import pl.pp.project.data.models.Author;
 import pl.pp.project.data.payloads.request.CreateAuthorRequest;
 import pl.pp.project.data.payloads.response.MessageResponse;
 import pl.pp.project.data.repository.AuthorRepository;
-import pl.pp.project.dto.AuthorDto;
 import pl.pp.project.dto.impl.AuthorToImportDto;
 import pl.pp.project.exception.AuthorAlreadyExistsException;
 import pl.pp.project.exception.ResourceNotFoundException;
