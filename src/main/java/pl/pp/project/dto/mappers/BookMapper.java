@@ -5,7 +5,6 @@ import pl.pp.project.data.models.Book;
 import pl.pp.project.data.models.User;
 import pl.pp.project.dto.AuthorDto;
 import pl.pp.project.dto.BookDto;
-import pl.pp.project.dto.impl.BookWithAuthorDto;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -15,13 +14,13 @@ import java.util.List;
 public class BookMapper {
 
         public static BookDto toBookWithAuthorDto(Book book, AuthorDto authorWithoutBooksDto) {
-            Integer id = book.getId();
+            int id = book.getId();
             String name = book.getName();
             String isbn = book.getIsbn();
             Date publicationYear = book.getPublicationYear();
-            Boolean isBorrowed = book.isBorrowed();
+            boolean isBorrowed = book.isBorrowed();
 
-            return new BookWithAuthorDto(id, name, isbn, publicationYear, isBorrowed, authorWithoutBooksDto);
+            return new pl.pp.project.dto.impl.BookWithAuthorDto(id, name, isbn, publicationYear, isBorrowed, authorWithoutBooksDto);
         }
 
         public static List<BookDto> bookListToBookWithAuthorDtoList(List<Book> books) {

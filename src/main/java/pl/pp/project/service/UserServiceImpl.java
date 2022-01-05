@@ -6,6 +6,8 @@ import pl.pp.project.data.models.User;
 import pl.pp.project.data.payloads.request.CreateUserRequest;
 import pl.pp.project.data.payloads.response.MessageResponse;
 import pl.pp.project.data.repository.UserRepository;
+import pl.pp.project.dto.impl.UserBookWithAuthorDto;
+import pl.pp.project.dto.mappers.UserMapper;
 import pl.pp.project.exception.ResourceNotFoundException;
 
 import java.util.List;
@@ -48,8 +50,9 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public User getASingleUser(Integer userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+    public UserBookWithAuthorDto getASingleUser(Integer userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+        return UserMapper.userToUserBookWithAuthorDto(user);
     }
 
     @Override

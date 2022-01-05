@@ -6,7 +6,6 @@ import pl.pp.project.data.models.Author;
 import pl.pp.project.data.models.Book;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Repository

@@ -10,7 +10,9 @@ import pl.pp.project.data.payloads.response.MessageResponse;
 import pl.pp.project.data.repository.BookRepository;
 import pl.pp.project.data.repository.UserRepository;
 import pl.pp.project.dto.BookDto;
+import pl.pp.project.dto.impl.UserBookWithAuthorDto;
 import pl.pp.project.dto.mappers.BookMapper;
+import pl.pp.project.dto.mappers.UserMapper;
 import pl.pp.project.exception.ResourceNotFoundException;
 
 import java.io.*;
@@ -32,8 +34,9 @@ public class DataExportServiceImpl implements DataExportService {
     public MessageResponse exportUserWithBorrowedBooks(ExportUserWithBorrowedBooksRequest exportUserWithBorrowedBooksRequest) {
         Integer userId = exportUserWithBorrowedBooksRequest.getUserId();
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+        UserBookWithAuthorDto userBookWithAuthorDto = UserMapper.userToUserBookWithAuthorDto(user);
             try {
-                mapper.writerWithDefaultPrettyPrinter().writeValue(new File(exportUserWithBorrowedBooksRequest.getPathToExport() + "/user.json"), user);
+                mapper.writerWithDefaultPrettyPrinter().writeValue(new File(exportUserWithBorrowedBooksRequest.getPathToExport() + "/user.json"), userBookWithAuthorDto);
             } catch (IOException e) {
                 e.printStackTrace();
             }

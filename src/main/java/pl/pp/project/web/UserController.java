@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.pp.project.data.models.User;
 import pl.pp.project.data.payloads.request.CreateUserRequest;
 import pl.pp.project.data.payloads.response.MessageResponse;
+import pl.pp.project.dto.impl.UserBookWithAuthorDto;
 import pl.pp.project.service.UserService;
 
 import javax.validation.Valid;
@@ -25,8 +26,8 @@ public class UserController extends RequestErrorHandlingController {
     }
 
     @GetMapping("/find/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable("id") Integer id) {
-        User user = userService.getASingleUser(id);
+    public ResponseEntity<UserBookWithAuthorDto> getUserById(@PathVariable("id") Integer id) {
+        UserBookWithAuthorDto user = userService.getASingleUser(id);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 

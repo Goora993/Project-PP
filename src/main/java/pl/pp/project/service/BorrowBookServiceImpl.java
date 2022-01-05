@@ -6,7 +6,6 @@ import pl.pp.project.data.models.Book;
 import pl.pp.project.data.models.BorrowedBook;
 import pl.pp.project.data.models.User;
 import pl.pp.project.data.payloads.request.BorrowBookRequest;
-import pl.pp.project.data.payloads.request.ReturnBookRequest;
 import pl.pp.project.data.payloads.response.MessageResponse;
 import pl.pp.project.data.repository.BookRepository;
 import pl.pp.project.data.repository.BorrowedBookRepository;

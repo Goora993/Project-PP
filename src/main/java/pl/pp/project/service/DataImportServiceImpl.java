@@ -44,6 +44,7 @@ public class DataImportServiceImpl implements DataImportService{
             TypeReference<List<BookToImportDto>> typeReference = new TypeReference<List<BookToImportDto>>() {};
             List<BookToImportDto> booksToImport = mapper.readValue(inputStream, typeReference);
             Optional<Author> existingAuthor;
+            Optional<Author> newAuthor;
             BookToImportDto bookToImportDto;
             AuthorToImportDto authorToImportDto;
             for (int i = 0; i < booksToImport.size(); i++) {
@@ -57,9 +58,10 @@ public class DataImportServiceImpl implements DataImportService{
                     existingAuthor = authorRepository.findById(authorId);
                     bookService.createBook(bookToImportDto, existingAuthor.get());
                 } else {
-                    authorId = authorService.createAuthor(authorToImportDto);
-                    existingAuthor = authorRepository.findById(authorId);
-                    bookService.createBook(bookToImportDto, existingAuthor.get());
+                    authorId = authorService.createAuthor(authorToImportDto).getId();
+                    System.out.println("Author Id: " + authorId);
+                    newAuthor = authorRepository.findById(authorId);
+                    bookService.createBook(bookToImportDto, newAuthor.get());
                 }
             }
         } catch (IOException e) {

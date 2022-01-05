@@ -12,7 +12,7 @@ import java.util.List;
 @Component
 public interface AuthorService {
     MessageResponse createAuthor(CreateAuthorRequest createAuthorRequest);
-    Integer createAuthor(AuthorToImportDto authorToImportDto);
+    Author createAuthor(AuthorToImportDto authorToImportDto);
     MessageResponse updateAuthor(Integer authorId, CreateAuthorRequest createAuthorRequest);
     void deleteAuthor(Integer authorId);
     Author getASingleAuthor(Integer authorId);

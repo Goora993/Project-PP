@@ -7,6 +7,7 @@ import pl.pp.project.data.payloads.request.CreateAuthorRequest;
 import pl.pp.project.data.payloads.response.MessageResponse;
 import pl.pp.project.data.repository.AuthorRepository;
 import pl.pp.project.dto.impl.AuthorToImportDto;
+import pl.pp.project.dto.mappers.AuthorMapper;
 import pl.pp.project.exception.AuthorAlreadyExistsException;
 import pl.pp.project.exception.ResourceNotFoundException;
 
@@ -21,7 +22,7 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public MessageResponse createAuthor(CreateAuthorRequest createAuthorRequest) {
         Optional<Author> existingAuthor = authorRepository.findByFirstNameAndLastNameAndDateOfBirth(createAuthorRequest.getFirstName(), createAuthorRequest.getLastName(), createAuthorRequest.getDateOfBirth());
-        if(existingAuthor.isPresent()){
+        if (existingAuthor.isPresent()) {
             throw new AuthorAlreadyExistsException(createAuthorRequest.getFirstName(), createAuthorRequest.getLastName(), createAuthorRequest.getDateOfBirth());
         } else {
             Author newAuthor = new Author();
@@ -34,13 +35,10 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public Integer createAuthor(AuthorToImportDto authorToImportDto){
-            Author newAuthor = new Author();
-            newAuthor.setFirstName(authorToImportDto.getFirstName());
-            newAuthor.setLastName(authorToImportDto.getLastName());
-            newAuthor.setDateOfBirth(authorToImportDto.getDateOfBirth());
-            authorRepository.save(newAuthor);
-            return newAuthor.getId();
+    public Author createAuthor(AuthorToImportDto authorToImportDto) {
+        Author newAuthor = AuthorMapper.toAuthor(authorToImportDto);
+        authorRepository.save(newAuthor);
+        return newAuthor;
     }
 
     @Override
