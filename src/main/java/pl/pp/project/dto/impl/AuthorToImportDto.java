@@ -1,11 +1,12 @@
 package pl.pp.project.dto.impl;
 
 import lombok.Data;
+import pl.pp.project.dto.AuthorDto;
 
 import java.sql.Date;
 
 public @Data
-class AuthorToImportDto {
+class AuthorToImportDto implements AuthorDto {
     private String firstName;
     private String lastName;
     private Date dateOfBirth;

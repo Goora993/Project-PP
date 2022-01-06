@@ -2,11 +2,12 @@ package pl.pp.project.dto.impl;
 
 import lombok.Data;
 import pl.pp.project.dto.BookDto;
+import pl.pp.project.dto.UserDto;
 
 import java.util.List;
 
 public @Data
-class UserBookWithAuthorDto {
+class UserBookWithAuthorDto implements UserDto {
     private int id;
     private String firstName;
     private String lastName;

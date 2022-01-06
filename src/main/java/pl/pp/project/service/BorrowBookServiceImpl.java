@@ -6,7 +6,6 @@ import pl.pp.project.data.models.Book;
 import pl.pp.project.data.models.BorrowedBook;
 import pl.pp.project.data.models.User;
 import pl.pp.project.data.payloads.request.BorrowBookRequest;
-import pl.pp.project.data.payloads.response.MessageResponse;
 import pl.pp.project.data.repository.BookRepository;
 import pl.pp.project.data.repository.BorrowedBookRepository;
 import pl.pp.project.data.repository.UserRepository;
@@ -26,7 +25,7 @@ public class BorrowBookServiceImpl implements BorrowBookService {
     BorrowedBookRepository borrowedBookRepository;
 
     @Override
-    public MessageResponse borrowBook(BorrowBookRequest borrowBookRequest) {
+    public BorrowedBook borrowBook(BorrowBookRequest borrowBookRequest) {
         Integer userId = borrowBookRequest.getUserId();
         Integer bookId = borrowBookRequest.getBookId();
         Optional<User> user = userRepository.findById(userId);
@@ -48,7 +47,7 @@ public class BorrowBookServiceImpl implements BorrowBookService {
                 borrowedBook.setActive(true);
                 bookRepository.save(book.get());
                 borrowedBookRepository.save(borrowedBook);
-                return new MessageResponse("Book was borrowed successfully");
+                return borrowedBook;
             }
         }
     }

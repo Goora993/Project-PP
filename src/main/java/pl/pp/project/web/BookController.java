@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.pp.project.data.models.Book;
 import pl.pp.project.data.payloads.request.CreateBookRequest;
-import pl.pp.project.data.payloads.response.MessageResponse;
 import pl.pp.project.dto.BookDto;
 import pl.pp.project.service.BookService;
 

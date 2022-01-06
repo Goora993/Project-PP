@@ -5,6 +5,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import pl.pp.project.data.models.Book;
+import pl.pp.project.data.models.BorrowedBook;
 import pl.pp.project.data.models.User;
 import pl.pp.project.data.payloads.request.BorrowBookRequest;
 import pl.pp.project.data.payloads.response.MessageResponse;
@@ -110,11 +111,13 @@ public class BorrowBookServiceImplTest {
         exisingBook.setBorrowed(false);
 
         //when
-        MessageResponse messageResponse = borrowBookService.borrowBook(borrowBookRequest);
+        BorrowedBook borrowedBook = borrowBookService.borrowBook(borrowBookRequest);
 
         //then
         assertThat(exisingBook.isBorrowed()).isTrue();
-        assertThat(messageResponse.getMessage()).isEqualTo("Book was borrowed successfully");
+        assertThat(borrowedBook.getUserId()).isEqualTo(borrowBookRequest.getUserId());
+        assertThat(borrowedBook.getBookId()).isEqualTo(borrowBookRequest.getBookId());
+        assertThat(borrowedBook.isActive()).isTrue();
     }
 
 }

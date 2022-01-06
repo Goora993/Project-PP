@@ -2,11 +2,8 @@ package pl.pp.project.dto.mappers;
 
 import pl.pp.project.data.models.User;
 import pl.pp.project.dto.BookDto;
-import pl.pp.project.dto.impl.AuthorWithoutBooksDto;
-import pl.pp.project.dto.impl.BookWithAuthorDto;
 import pl.pp.project.dto.impl.UserBookWithAuthorDto;
 
-import java.sql.Date;
 import java.util.List;
 
 public class UserMapper {

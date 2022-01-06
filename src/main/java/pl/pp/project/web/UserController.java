@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.pp.project.data.models.User;
 import pl.pp.project.data.payloads.request.CreateUserRequest;
-import pl.pp.project.data.payloads.response.MessageResponse;
 import pl.pp.project.dto.impl.UserBookWithAuthorDto;
 import pl.pp.project.service.UserService;
 
@@ -32,14 +31,14 @@ public class UserController extends RequestErrorHandlingController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<MessageResponse> addUser(@Valid @RequestBody CreateUserRequest user) {
-        MessageResponse newUser = userService.createUser(user);
+    public ResponseEntity<User> addUser(@Valid @RequestBody CreateUserRequest user) {
+        User newUser = userService.createUser(user);
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<MessageResponse> updateUser(@PathVariable Integer id, @RequestBody CreateUserRequest user) {
-        MessageResponse updateUser = userService.updateUser(id, user);
+    public ResponseEntity<User> updateUser(@PathVariable Integer id, @RequestBody CreateUserRequest user) {
+        User updateUser = userService.updateUser(id, user);
         return new ResponseEntity<>(updateUser, HttpStatus.OK);
     }
 

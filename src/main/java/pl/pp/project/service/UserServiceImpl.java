@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.pp.project.data.models.User;
 import pl.pp.project.data.payloads.request.CreateUserRequest;
-import pl.pp.project.data.payloads.response.MessageResponse;
 import pl.pp.project.data.repository.UserRepository;
 import pl.pp.project.dto.impl.UserBookWithAuthorDto;
 import pl.pp.project.dto.mappers.UserMapper;
@@ -19,17 +18,17 @@ public class UserServiceImpl implements UserService{
     UserRepository userRepository;
 
     @Override
-    public MessageResponse createUser(CreateUserRequest createUserRequest) {
+    public User createUser(CreateUserRequest createUserRequest) {
         User newUser = new User();
         newUser.setFirstName(createUserRequest.getFirstName());
         newUser.setLastName(createUserRequest.getLastName());
         newUser.setPesel(createUserRequest.getPesel());
         userRepository.save(newUser);
-        return new MessageResponse("New user created successfully");
+        return newUser;
     }
 
     @Override
-    public MessageResponse updateUser(Integer userId, CreateUserRequest createUserRequest) {
+    public User updateUser(Integer userId, CreateUserRequest createUserRequest) {
         Optional<User> user = userRepository.findById(userId);
         if (user.isEmpty()) {
             throw new ResourceNotFoundException("User", "id", userId);
@@ -38,7 +37,7 @@ public class UserServiceImpl implements UserService{
             user.get().setLastName(createUserRequest.getLastName());
             user.get().setPesel(createUserRequest.getPesel());
             userRepository.save(user.get());
-            return new MessageResponse("User updated successfully");
+            return user.get();
         }
     }
 

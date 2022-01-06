@@ -25,7 +25,6 @@ public class BookMapper {
 
         public static List<BookDto> bookListToBookWithAuthorDtoList(List<Book> books) {
             List<BookDto> bookWithAuthorDtos = new ArrayList<>();
-
             for (int i = 0; i < books.size(); i++) {
                 AuthorDto authorWithoutBooksDto = AuthorMapper.toAuthorWithoutBooks(books.get(i).getAuthor());
                 BookDto bookWithAuthorDto = BookMapper.toBookWithAuthorDto(books.get(i), authorWithoutBooksDto);

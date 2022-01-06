@@ -6,7 +6,6 @@ import pl.pp.project.data.models.Book;
 import pl.pp.project.data.models.BorrowedBook;
 import pl.pp.project.data.models.User;
 import pl.pp.project.data.payloads.request.ReturnBookRequest;
-import pl.pp.project.data.payloads.response.MessageResponse;
 import pl.pp.project.data.repository.BookRepository;
 import pl.pp.project.data.repository.BorrowedBookRepository;
 import pl.pp.project.data.repository.UserRepository;
@@ -27,7 +26,7 @@ public class ReturnBookServiceImpl implements ReturnBookService {
     BorrowedBookRepository borrowedBookRepository;
 
     @Override
-    public MessageResponse returnBook(ReturnBookRequest returnBookRequest) {
+    public BorrowedBook returnBook(ReturnBookRequest returnBookRequest) {
         Integer userIdRelatedToBorrowedBook;
         Integer userId = returnBookRequest.getUserId();
         Integer bookId = returnBookRequest.getBookId();
@@ -50,7 +49,7 @@ public class ReturnBookServiceImpl implements ReturnBookService {
                     borrowedBook.get().setActive(false);
                     bookRepository.save(book.get());
                     borrowedBookRepository.save(borrowedBook.get());
-                    return new MessageResponse("Book was returned successfully");
+                    return borrowedBook.get();
                 } else {
                     throw new BookAlreadyReturnedException(bookId);
                 }

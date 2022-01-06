@@ -15,7 +15,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/import")
-public class DataImportController {
+public class DataImportController extends RequestErrorHandlingController {
         @Autowired
         DataImportService dataImportService;
 

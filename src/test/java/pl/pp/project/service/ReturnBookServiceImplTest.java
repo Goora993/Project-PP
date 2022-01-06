@@ -144,22 +144,21 @@ public class ReturnBookServiceImplTest {
         //given
         BorrowedBook borrowedBook = new BorrowedBook();
         borrowedBook.setUserId(1);
+        borrowedBook.setBookId(1);
         borrowedBook.setActive(true);
-        when(userRepository.findById(1))
-                .thenReturn(Optional.of(new User()));
-        when(bookRepository.findById(1))
-                .thenReturn(Optional.of(new Book()));
-        when(borrowedBookRepository.findById(1))
-                .thenReturn(Optional.of(borrowedBook));
+        when(userRepository.findById(1)).thenReturn(Optional.of(new User()));
+        when(bookRepository.findById(1)).thenReturn(Optional.of(new Book()));
+        when(borrowedBookRepository.findById(1)).thenReturn(Optional.of(borrowedBook));
         returnBookRequest.setUserId(1);
         returnBookRequest.setBookId(1);
 
         //when
-        MessageResponse messageResponse = returnBookService.returnBook(returnBookRequest);
+        BorrowedBook returnedBook = returnBookService.returnBook(returnBookRequest);
 
         //then
-        assertThat(messageResponse.getMessage())
-                .isEqualTo("Book was returned successfully");
+        assertThat(returnedBook.getBookId()).isEqualTo(returnBookRequest.getBookId());
+        assertThat(returnedBook.getUserId()).isEqualTo(returnBookRequest.getUserId());
+        assertThat(returnedBook.isActive()).isFalse();
     }
 
 

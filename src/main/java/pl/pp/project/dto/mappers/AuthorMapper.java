@@ -3,7 +3,6 @@ package pl.pp.project.dto.mappers;
 import org.springframework.stereotype.Component;
 import pl.pp.project.data.models.Author;
 import pl.pp.project.dto.AuthorDto;
-import pl.pp.project.dto.impl.AuthorToImportDto;
 import pl.pp.project.dto.impl.AuthorWithoutBooksDto;
 
 import java.sql.Date;
@@ -18,7 +17,7 @@ public class AuthorMapper {
         return new AuthorWithoutBooksDto(id, firstName, lastName, dateOfBirth);
     }
 
-    public static Author toAuthor (AuthorToImportDto authorToImportDto) {
+    public static Author toAuthor (AuthorDto authorToImportDto) {
         return new Author(authorToImportDto.getFirstName(), authorToImportDto.getLastName(), authorToImportDto.getDateOfBirth());
     }
 }
