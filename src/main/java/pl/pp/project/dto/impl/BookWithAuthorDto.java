@@ -16,6 +16,9 @@ public @Data class BookWithAuthorDto implements BookDto {
         private boolean isBorrowed;
         private AuthorDto author;
 
+    public BookWithAuthorDto() {
+    }
+
     public BookWithAuthorDto(int id, String name, String isbn, Date publicationYear, boolean isBorrowed, AuthorDto author) {
         this.id = id;
         this.name = name;

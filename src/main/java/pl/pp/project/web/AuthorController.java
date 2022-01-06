@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.pp.project.data.models.Author;
 import pl.pp.project.data.payloads.request.CreateAuthorRequest;
-import pl.pp.project.data.payloads.response.MessageResponse;
 import pl.pp.project.service.AuthorService;
 
 import javax.validation.Valid;
@@ -31,15 +30,15 @@ public class AuthorController extends RequestErrorHandlingController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<MessageResponse> addAuthor(@Valid @RequestBody CreateAuthorRequest author) {
-        MessageResponse newAuthor = authorService.createAuthor(author);
+    public ResponseEntity<Author> addAuthor(@Valid @RequestBody CreateAuthorRequest author) {
+        Author newAuthor = authorService.createAuthor(author);
         return new ResponseEntity<>(newAuthor, HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<MessageResponse> updateAuthor(@PathVariable Integer id, @RequestBody CreateAuthorRequest author) {
-        MessageResponse updateAuthor = authorService.updateAuthor(id, author);
-        return new ResponseEntity<>(updateAuthor, HttpStatus.OK);
+    public ResponseEntity<Author> updateAuthor(@PathVariable Integer id, @RequestBody CreateAuthorRequest author) {
+        Author updatedAuthor = authorService.updateAuthor(id, author);
+        return new ResponseEntity<>(updatedAuthor, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")

@@ -1,13 +1,11 @@
 package pl.pp.project.service;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import pl.pp.project.data.models.Author;
 import pl.pp.project.data.payloads.request.CreateAuthorRequest;
-import pl.pp.project.data.payloads.response.MessageResponse;
 import pl.pp.project.data.repository.AuthorRepository;
 import pl.pp.project.dto.impl.AuthorToImportDto;
 import pl.pp.project.exception.AuthorAlreadyExistsException;
@@ -16,6 +14,7 @@ import pl.pp.project.exception.ResourceNotFoundException;
 import java.sql.Date;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -48,7 +47,7 @@ public class AuthorServiceImplTest {
         Throwable thrown = catchThrowable(() -> authorService.createAuthor(createAuthorRequest));
 
         //then
-        Assertions.assertThat(thrown)
+        assertThat(thrown)
                 .isInstanceOf(AuthorAlreadyExistsException.class)
                 .hasMessageContaining("Author New Author born in 1999-11-11 already exist");
     }
@@ -64,11 +63,12 @@ public class AuthorServiceImplTest {
         createAuthorRequest.setDateOfBirth(Date.valueOf("1999-11-11"));
 
         //when
-        MessageResponse actualMessageResponse = authorService.createAuthor(createAuthorRequest);
+        Author author = authorService.createAuthor(createAuthorRequest);
 
         //then
-        Assertions.assertThat(actualMessageResponse)
-                .isEqualTo(new MessageResponse("New author created successfully"));
+        assertThat(author.getFirstName()).isEqualTo(createAuthorRequest.getFirstName());
+        assertThat(author.getLastName()).isEqualTo(createAuthorRequest.getLastName());
+        assertThat(author.getDateOfBirth()).isEqualTo(createAuthorRequest.getDateOfBirth());
     }
 
     @Test
@@ -80,7 +80,7 @@ public class AuthorServiceImplTest {
         Author newAuthor = authorService.createAuthor(authorToImportDto);
 
         //then
-        Assertions.assertThat(newAuthor)
+        assertThat(newAuthor)
                 .isEqualTo(new Author("Jan", "Kowalski", Date.valueOf("1999-11-11")));
     }
 
@@ -95,7 +95,7 @@ public class AuthorServiceImplTest {
         Throwable thrown = catchThrowable(() -> authorService.updateAuthor(1, createAuthorRequest));
 
         //then
-        Assertions.assertThat(thrown)
+        assertThat(thrown)
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining("Cannot find Author with id: 1");
     }
@@ -111,11 +111,13 @@ public class AuthorServiceImplTest {
         createAuthorRequest.setDateOfBirth(Date.valueOf("1999-11-11"));
 
         //when
-        MessageResponse actualMessageResponse = authorService.updateAuthor(1, createAuthorRequest);
+        Author updatedAuthor = authorService.updateAuthor(1, createAuthorRequest);
 
         //then
-        Assertions.assertThat(actualMessageResponse)
-                .isEqualTo(new MessageResponse("Author updated successfully"));
+        assertThat(updatedAuthor.getFirstName()).isEqualTo(createAuthorRequest.getFirstName());
+        assertThat(updatedAuthor.getLastName()).isEqualTo(createAuthorRequest.getLastName());
+        assertThat(updatedAuthor.getDateOfBirth()).isEqualTo(createAuthorRequest.getDateOfBirth());
+
     }
 
 

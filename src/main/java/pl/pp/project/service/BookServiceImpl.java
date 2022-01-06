@@ -26,7 +26,7 @@ public class BookServiceImpl implements BookService {
     AuthorRepository authorRepository;
 
     @Override
-    public MessageResponse createBook(CreateBookRequest createBookRequest) {
+    public Book createBook(CreateBookRequest createBookRequest) {
         Book newBook = new Book();
         Optional<Author> authorById = authorRepository.findById(createBookRequest.getAuthorId());
         if (authorById.isPresent()) {
@@ -35,25 +35,25 @@ public class BookServiceImpl implements BookService {
             newBook.setName(createBookRequest.getName());
             newBook.setAuthor(authorById.get());
             bookRepository.save(newBook);
-            return new MessageResponse("New book was added successfully");
+            return newBook;
         } else {
             throw new ResourceNotFoundException("Author", "id", createBookRequest.getAuthorId());
         }
     }
 
     @Override
-    public MessageResponse createBook(BookToImportDto bookToImportDto, Author author) {
+    public Book createBook(BookToImportDto bookToImportDto, Author author) {
         Book newBook = new Book();
         newBook.setIsbn(bookToImportDto.getIsbn());
         newBook.setPublicationYear(bookToImportDto.getPublicationYear());
         newBook.setName(bookToImportDto.getName());
         newBook.setAuthor(author);
         bookRepository.save(newBook);
-        return new MessageResponse("New book was added successfully");
+        return newBook;
     }
 
     @Override
-    public MessageResponse updateBook(Integer bookId, CreateBookRequest createBookRequest) throws ResourceNotFoundException {
+    public Book updateBook(Integer bookId, CreateBookRequest createBookRequest) throws ResourceNotFoundException {
         Optional<Book> book = bookRepository.findById(bookId);
         if (book.isEmpty()) {
             throw new ResourceNotFoundException("Book", "id", bookId);
@@ -65,7 +65,7 @@ public class BookServiceImpl implements BookService {
                 book.get().setIsbn(createBookRequest.getIsbn());
                 book.get().setPublicationYear(createBookRequest.getPublicationYear());
                 bookRepository.save(book.get());
-                return new MessageResponse("Book updated successfully");
+                return book.get();
             } else {
                 throw new ResourceNotFoundException("Author", "id", createBookRequest.getAuthorId());
             }

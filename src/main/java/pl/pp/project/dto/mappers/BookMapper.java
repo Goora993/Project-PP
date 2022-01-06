@@ -33,28 +33,4 @@ public class BookMapper {
             }
             return bookWithAuthorDtos;
         }
-
-//        public static List<Book> bookDtoListToBookDto(List<BookDto> booksDto) {
-//           List<Book> books = new ArrayList<>();
-//
-//            for (int i = 0; i < booksDto.size(); i++) {
-//                Author author = AuthorMapper.toAuthor(booksDto.get(i).getAuthor(), );
-//                BookDto bookWithAuthorDto = BookMapper.toBookWithAuthorDto(books.get(i), authorWithoutBooksDto);
-//                bookWithAuthorDtos.add(i, bookWithAuthorDto);
-//            }
-//            return bookWithAuthorDtos;
-//        }
-
-        public static Book toBook (BookDto bookDto, User user) {
-            Book book = new Book();
-            book.setId(bookDto.getId());
-            book.setName(bookDto.getName());
-            book.setIsbn(bookDto.getIsbn());
-            book.setPublicationYear(bookDto.getPublicationYear());
-            book.setBorrowed(bookDto.isBorrowed());
-            if(bookDto.isBorrowed()) {
-                book.setUser(user);
-            }
-            return new Book();
-        }
 }

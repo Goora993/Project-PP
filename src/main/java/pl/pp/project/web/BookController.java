@@ -32,15 +32,15 @@ public class BookController extends RequestErrorHandlingController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<MessageResponse> addBook(@Valid @RequestBody CreateBookRequest book) {
-        MessageResponse newBook = bookService.createBook(book);
+    public ResponseEntity<Book> addBook(@Valid @RequestBody CreateBookRequest book) {
+        Book newBook = bookService.createBook(book);
         return new ResponseEntity<>(newBook, HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<MessageResponse> updateBook( @PathVariable Integer id, @RequestBody CreateBookRequest book) {
-        MessageResponse updateBook = bookService.updateBook(id, book);
-        return new ResponseEntity<>(updateBook, HttpStatus.OK);
+    public ResponseEntity<Book> updateBook( @PathVariable Integer id, @RequestBody CreateBookRequest book) {
+        Book updatedBook = bookService.updateBook(id, book);
+        return new ResponseEntity<>(updatedBook, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")

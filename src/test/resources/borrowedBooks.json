@@ -1,0 +1,13 @@
+[ {
+  "id" : 0,
+  "name" : null,
+  "isbn" : null,
+  "publicationYear" : null,
+  "author" : {
+    "id" : 0,
+    "firstName" : null,
+    "lastName" : null,
+    "dateOfBirth" : null
+  },
+  "borrowed" : false
+} ]

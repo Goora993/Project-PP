@@ -2,13 +2,16 @@ package pl.pp.project.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.pp.project.data.models.Author;
+import pl.pp.project.data.models.Book;
 import pl.pp.project.data.payloads.request.ImportBooksRequest;
 import pl.pp.project.data.payloads.response.MessageResponse;
 import pl.pp.project.data.repository.AuthorRepository;
 import pl.pp.project.data.repository.BookRepository;
+import pl.pp.project.dto.BookDto;
 import pl.pp.project.dto.impl.AuthorToImportDto;
 import pl.pp.project.dto.impl.BookToImportDto;
 
@@ -20,7 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class DataImportServiceImpl implements DataImportService{
+public class DataImportServiceImpl implements DataImportService {
     @Autowired
     AuthorRepository authorRepository;
 
@@ -37,36 +40,34 @@ public class DataImportServiceImpl implements DataImportService{
     ObjectMapper mapper;
 
 
+    @SneakyThrows
     @Override
     public MessageResponse importBooks(ImportBooksRequest importBooksRequest) {
-        try {
-            InputStream inputStream = new FileInputStream(new File(importBooksRequest.getPathToImport()));
-            TypeReference<List<BookToImportDto>> typeReference = new TypeReference<List<BookToImportDto>>() {};
-            List<BookToImportDto> booksToImport = mapper.readValue(inputStream, typeReference);
-            Optional<Author> existingAuthor;
-            Optional<Author> newAuthor;
-            BookToImportDto bookToImportDto;
-            AuthorToImportDto authorToImportDto;
-            for (int i = 0; i < booksToImport.size(); i++) {
-                int authorId;
-                bookToImportDto = booksToImport.get(i);
-                authorToImportDto = bookToImportDto.getAuthor();
-                existingAuthor = authorRepository.findByFirstNameAndLastNameAndDateOfBirth(
-                        authorToImportDto.getFirstName(), authorToImportDto.getLastName(), authorToImportDto.getDateOfBirth());
-                if(existingAuthor.isPresent()){
-                    authorId = existingAuthor.get().getId();
-                    existingAuthor = authorRepository.findById(authorId);
-                    bookService.createBook(bookToImportDto, existingAuthor.get());
-                } else {
-                    authorId = authorService.createAuthor(authorToImportDto).getId();
-                    System.out.println("Author Id: " + authorId);
-                    newAuthor = authorRepository.findById(authorId);
-                    bookService.createBook(bookToImportDto, newAuthor.get());
-                }
+        InputStream inputStream = new FileInputStream(new File(importBooksRequest.getPathToImport()));
+        TypeReference<List<BookToImportDto>> typeReference = new TypeReference<List<BookToImportDto>>() {
+        };
+        List<BookToImportDto> booksToImport = mapper.readValue(inputStream, typeReference);
+        Optional<Author> existingAuthor;
+        AuthorToImportDto authorToImportDto;
+        for (BookToImportDto bookToImportDto : booksToImport) {
+            authorToImportDto = bookToImportDto.getAuthor();
+            existingAuthor = authorRepository.findByFirstNameAndLastNameAndDateOfBirth(
+                    authorToImportDto.getFirstName(), authorToImportDto.getLastName(), authorToImportDto.getDateOfBirth());
+            if (existingAuthor.isPresent()) {
+                createBookWithExistingAuthor(existingAuthor.get(), bookToImportDto);
+            } else {
+                createBookWithNewAuthor(bookToImportDto);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
         return new MessageResponse("Books were imported successfully");
+    }
+
+    private void createBookWithExistingAuthor(Author existingAuthor, BookToImportDto bookToImportDto){
+        bookService.createBook(bookToImportDto, existingAuthor);
+    }
+
+    private void createBookWithNewAuthor(BookToImportDto bookToImportDto){
+        Author newAuthor = authorService.createAuthor(bookToImportDto.getAuthor());
+        bookService.createBook(bookToImportDto, newAuthor);
     }
 }

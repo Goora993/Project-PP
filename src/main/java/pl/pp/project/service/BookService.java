@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component;
 import pl.pp.project.data.models.Author;
 import pl.pp.project.data.models.Book;
 import pl.pp.project.data.payloads.request.CreateBookRequest;
-import pl.pp.project.data.payloads.response.MessageResponse;
 import pl.pp.project.dto.BookDto;
 import pl.pp.project.dto.impl.BookToImportDto;
 
@@ -13,9 +12,9 @@ import java.util.Set;
 
 @Component
 public interface BookService {
-    MessageResponse createBook(CreateBookRequest createBookRequest);
-    MessageResponse createBook(BookToImportDto bookToImportDto, Author author);
-    MessageResponse updateBook(Integer bookId, CreateBookRequest createBookRequest);
+    Book createBook(CreateBookRequest createBookRequest);
+    Book createBook(BookToImportDto bookToImportDto, Author author);
+    Book updateBook(Integer bookId, CreateBookRequest createBookRequest);
     void deleteBook(Integer bookId);
     Book getASingleBook(Integer bookId);
     List<BookDto> getAllBooks();

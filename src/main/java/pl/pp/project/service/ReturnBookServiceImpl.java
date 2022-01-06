@@ -35,7 +35,6 @@ public class ReturnBookServiceImpl implements ReturnBookService {
         Optional<Book> book = bookRepository.findById(bookId);
         Optional<BorrowedBook> borrowedBook = borrowedBookRepository.findById(bookId);
 
-
         if (user.isEmpty()) {
             throw new ResourceNotFoundException("User", "id", userId);
         } else if (book.isEmpty()) {

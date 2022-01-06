@@ -1,0 +1,11 @@
+[
+  {
+    "name": "Książka Nowa1",
+    "isbn": "3907232332",
+    "publicationYear": "1999-11-11",
+    "author": {
+      "firstName": "Arnold",
+      "lastName": "Boczek",
+      "dateOfBirth": "1970-10-10"
+    }
+  } ]

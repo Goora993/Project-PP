@@ -7,9 +7,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import pl.pp.project.data.models.Author;
 import pl.pp.project.data.models.Book;
 import pl.pp.project.data.payloads.request.CreateBookRequest;
-import pl.pp.project.data.payloads.response.MessageResponse;
 import pl.pp.project.data.repository.AuthorRepository;
 import pl.pp.project.data.repository.BookRepository;
+import pl.pp.project.dto.impl.AuthorToImportDto;
+import pl.pp.project.dto.impl.BookToImportDto;
 import pl.pp.project.exception.ResourceNotFoundException;
 
 import java.sql.Date;
@@ -39,6 +40,7 @@ public class BookServiceImplTest {
     @Test
     public void bookIsCreatedSuccessfully() {
         //given
+        existingAuthor.setId(1);
         when(authorRepository
                 .findById(any(Integer.class)))
                 .thenReturn(Optional.of(existingAuthor));
@@ -49,11 +51,13 @@ public class BookServiceImplTest {
         createBookRequest.setAuthorId(1);
 
         //when
-        MessageResponse actualMessageResponse = bookService.createBook(createBookRequest);
+        Book createdBook = bookService.createBook(createBookRequest);
 
         //then
-        assertThat(actualMessageResponse)
-                .isEqualTo(new MessageResponse("New book was added successfully"));
+        assertThat(createdBook.getName()).isEqualTo(createBookRequest.getName());
+        assertThat(createdBook.getIsbn()).isEqualTo(createBookRequest.getIsbn());
+        assertThat(createdBook.getPublicationYear()).isEqualTo(createBookRequest.getPublicationYear());
+        assertThat(createdBook.getAuthorId()).isEqualTo(createBookRequest.getAuthorId());
     }
 
     @Test
@@ -75,6 +79,27 @@ public class BookServiceImplTest {
         assertThat(thrown)
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining("Cannot find Author with id: 1");
+    }
+
+    @Test
+    public void bookToImportIsCreatedSuccessfully() {
+        //given
+        existingAuthor.setId(1);
+        existingAuthor.setFirstName("Jan");
+        existingAuthor.setLastName("Kowalski");
+        existingAuthor.setDateOfBirth(Date.valueOf("1999-10-10"));
+        AuthorToImportDto authorToImportDto = new AuthorToImportDto("Jan", "Kowalski", Date.valueOf("1999-10-10"));
+        BookToImportDto bookToImportDto = new BookToImportDto("Książka", "123123", Date.valueOf("1999-10-10"), authorToImportDto);
+
+        //when
+        Book importedBook = bookService.createBook(bookToImportDto, existingAuthor);
+        //then
+        assertThat(importedBook.getName()).isEqualTo(bookToImportDto.getName());
+        assertThat(importedBook.getIsbn()).isEqualTo(bookToImportDto.getIsbn());
+        assertThat(importedBook.getPublicationYear()).isEqualTo(bookToImportDto.getPublicationYear());
+        assertThat(importedBook.getAuthor().getFirstName()).isEqualTo(authorToImportDto.getFirstName());
+        assertThat(importedBook.getAuthor().getLastName()).isEqualTo(authorToImportDto.getLastName());
+        assertThat(importedBook.getAuthor().getDateOfBirth()).isEqualTo(authorToImportDto.getDateOfBirth());
     }
 
     @Test
@@ -115,6 +140,8 @@ public class BookServiceImplTest {
 
     @Test
     public void updateBookSuccessfully() {
+        //given
+        existingAuthor.setId(1);
         when(authorRepository
                 .findById(1))
                 .thenReturn(Optional.of(existingAuthor));
@@ -122,9 +149,18 @@ public class BookServiceImplTest {
                 .findById(1))
                 .thenReturn(Optional.of(existingBook));
         createBookRequest.setAuthorId(1);
+        createBookRequest.setName("Ksiazka");
+        createBookRequest.setIsbn("123");
+        createBookRequest.setPublicationYear(Date.valueOf("1999-10-10"));
+        createBookRequest.setAuthorId(1);
 
-        MessageResponse messageResponse = bookService.updateBook(1, createBookRequest);
+        //when
+        Book updatedBook = bookService.updateBook(1, createBookRequest);
 
-        assertThat(messageResponse.getMessage()).isEqualTo("Book updated successfully");
+        //then
+        assertThat(updatedBook.getName()).isEqualTo(createBookRequest.getName());
+        assertThat(updatedBook.getIsbn()).isEqualTo(createBookRequest.getIsbn());
+        assertThat(updatedBook.getPublicationYear()).isEqualTo(createBookRequest.getPublicationYear());
+        assertThat(updatedBook.getAuthor().getId()).isEqualTo(createBookRequest.getAuthorId());
     }
 }

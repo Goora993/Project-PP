@@ -20,7 +20,7 @@ public class AuthorServiceImpl implements AuthorService {
     AuthorRepository authorRepository;
 
     @Override
-    public MessageResponse createAuthor(CreateAuthorRequest createAuthorRequest) {
+    public Author createAuthor(CreateAuthorRequest createAuthorRequest) {
         Optional<Author> existingAuthor = authorRepository.findByFirstNameAndLastNameAndDateOfBirth(createAuthorRequest.getFirstName(), createAuthorRequest.getLastName(), createAuthorRequest.getDateOfBirth());
         if (existingAuthor.isPresent()) {
             throw new AuthorAlreadyExistsException(createAuthorRequest.getFirstName(), createAuthorRequest.getLastName(), createAuthorRequest.getDateOfBirth());
@@ -30,7 +30,7 @@ public class AuthorServiceImpl implements AuthorService {
             newAuthor.setLastName(createAuthorRequest.getLastName());
             newAuthor.setDateOfBirth(createAuthorRequest.getDateOfBirth());
             authorRepository.save(newAuthor);
-            return new MessageResponse("New author created successfully");
+            return newAuthor;
         }
     }
 
@@ -42,7 +42,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public MessageResponse updateAuthor(Integer authorId, CreateAuthorRequest createAuthorRequest) {
+    public Author updateAuthor(Integer authorId, CreateAuthorRequest createAuthorRequest) {
         Optional<Author> author = authorRepository.findById(authorId);
         if (author.isEmpty()) {
             throw new ResourceNotFoundException("Author", "id", authorId);
@@ -51,7 +51,7 @@ public class AuthorServiceImpl implements AuthorService {
             author.get().setLastName(createAuthorRequest.getLastName());
             author.get().setDateOfBirth(createAuthorRequest.getDateOfBirth());
             authorRepository.save(author.get());
-            return new MessageResponse("Author updated successfully");
+            return author.get();
         }
     }
 
